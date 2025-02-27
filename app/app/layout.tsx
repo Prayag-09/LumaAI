@@ -9,6 +9,25 @@ import Navbar from '@/components/Navbar';
 import { neobrutalism } from '@clerk/themes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+// Define font styles
+const roboto = Roboto({
+	weight: ['400', '700'],
+	subsets: ['latin'],
+	variable: '--font-roboto',
+});
+
+const orbitron = Orbitron({
+	weight: ['400', '700'],
+	subsets: ['latin'],
+	variable: '--font-orbitron',
+});
+
+const sourceCodePro = Source_Code_Pro({
+	weight: ['400', '700'],
+	subsets: ['latin'],
+	variable: '--font-sourcecodepro',
+});
+
 // Metadata for SEO and branding
 // export const metadata: Metadata = {
 // 	title: 'LumaAI - The Future of AI',
@@ -33,24 +52,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // 	},
 // };
 
-const roboto = Roboto({
-	weight: ['400', '700'],
-	subsets: ['latin'],
-	variable: '--font-roboto',
-});
-
-const orbitron = Orbitron({
-	weight: ['400', '700'],
-	subsets: ['latin'],
-	variable: '--font-orbitron',
-});
-
-const source_code_pro = Source_Code_Pro({
-	weight: ['400', '700'],
-	subsets: ['latin'],
-	variable: '--font-sourcecodepro',
-});
-
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
@@ -72,7 +73,9 @@ export default function RootLayout({
 				baseTheme: neobrutalism,
 			}}>
 			<QueryClientProvider client={queryClient}>
-				<html lang='en' className={`${roboto.variable} ${orbitron.variable}`}>
+				<html
+					lang='en'
+					className={`${roboto.variable} ${orbitron.variable} ${sourceCodePro.variable}`}>
 					<body className='bg-black text-white min-h-screen flex flex-col'>
 						{/* Fixed Navbar */}
 						<div className='fixed top-0 left-0 w-full z-50'>

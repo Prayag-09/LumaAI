@@ -130,7 +130,7 @@ const ChatList: React.FC = () => {
 				<p className='text-sm font-semibold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-950'>
 					Upgrade to Pro
 				</p>
-				<span className='text-xs text-gray-400 block mt-1'>
+				<span className='text-xs  text-gray-400 block mt-1'>
 					Unlock limitless AI power
 				</span>
 				<Link

@@ -17,9 +17,9 @@
 body {
 	color: var(--foreground);
 	background: var(--background);
-	font-family: var(--font-srcpro), serif;
+	font-family: var(--font-sourcecodepro), monospace;
 	font-optical-sizing: auto;
-}
+  }
 
 .nav-link {
 	color: #bbb;

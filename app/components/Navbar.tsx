@@ -68,7 +68,8 @@ const AnimatedLogo: React.FC = () => {
 			<motion.text
 				x='15'
 				y='42'
-				fontFamily='Orbitron, sans-serif'
+				className='font-sourcecodepro'
+				fontFamily=', sans-serif'
 				fontSize='34'
 				fontWeight='600'
 				fill='url(#darkGradient)'
@@ -101,7 +102,7 @@ const Navbar: React.FC = () => {
 			</Link>
 
 			{/* Navigation */}
-			<div className='flex items-center gap-8 text-base font-orbitron'>
+			<div className='flex items-center gap-8 font-bold text-xl font-sourcecodepro'>
 				<SignedIn>
 					<motion.div
 						whileHover={{ scale: 1.1, y: -2 }}
