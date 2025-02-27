@@ -32,7 +32,7 @@ export const GoogleGeminiEffect = ({
 			</p>
 			<div className='w-full h-[890px] pt-52 -top-60 md:-top-40 flex items-center justify-center absolute'>
 				<button
-					onClick={() => router.push('/chat')}
+					onClick={() => router.push('/dashboard')}
 					className='relative font-bold text-white bg-black border border-white rounded-full 
         md:px-6 md:py-3 px-4 py-2 md:mt-24 mt-8 z-30 md:text-lg text-sm w-fit mx-auto 
         transition-all duration-300 ease-in-out transform hover:scale-110 
