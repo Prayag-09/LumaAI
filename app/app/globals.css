@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--background: #ffffff;
+	--foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--background: #0a0a0a;
+		--foreground: #ededed;
+	}
+}
+
+body {
+	color: var(--foreground);
+	background: var(--background);
+	font-family: var(--font-srcpro), serif;
+	font-optical-sizing: auto;
+}
+
+.nav-link {
+	color: #bbb;
+	text-shadow: 0px 0px 5px rgba(0, 255, 255, 0.5);
+	transition: all 0.3s ease-in-out;
+}
+
+.nav-link:hover {
+	color: #fff;
+	text-shadow: 0px 0px 10px rgba(0, 255, 255, 0.8);
+	transform: scale(1.1) rotateX(10deg);
+}
+
+.neon-glow {
+	text-shadow: 0px 0px 10px rgba(0, 255, 255, 0.8);
+	transition: text-shadow 0.3s ease-in-out;
+}
+
+.neon-glow:hover {
+	text-shadow: 0px 0px 15px rgba(0, 255, 255, 1);
+}
