@@ -2,14 +2,14 @@
 
 import React from 'react';
 import { Roboto, Orbitron, Source_Code_Pro } from 'next/font/google';
-import type { Metadata } from 'next';
+// import type { Metadata } from 'next';
 import { ClerkProvider } from '@clerk/nextjs';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import { neobrutalism } from '@clerk/themes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-// Define font styles
+
 const roboto = Roboto({
 	weight: ['400', '700'],
 	subsets: ['latin'],
