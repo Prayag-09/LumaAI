@@ -26,16 +26,16 @@ const TypingAnimation: React.FC = () => {
 			}}
 			className='flex items-center gap-3 px-6 py-3 bg-black/70 backdrop-blur-lg border border-gray-800 rounded-full shadow-lg'>
 			<TypeAnimation
-				sequence={emojiSequences.flatMap((seq) => [seq, 1500])} // 1500ms pause for readability
+				sequence={emojiSequences.flatMap((seq) => [seq, 1500])}
 				wrapper='span'
-				speed={50} // Smoother typing speed
-				preRenderFirstString={true} // Pre-renders for instant display
+				speed={50}
+				preRenderFirstString={true}
 				style={{
 					fontSize: '1.25em',
 					fontWeight: '600',
 					fontFamily: 'Orbitron, sans-serif',
 					color: '#FFFFFF',
-					textShadow: '0 0 10px rgba(147, 51, 234, 0.6)', // Stronger purple glow
+					textShadow: '0 0 10px rgba(147, 51, 234, 0.6)',
 					display: 'inline-block',
 				}}
 				repeat={Infinity}
@@ -53,7 +53,6 @@ const TypingAnimation: React.FC = () => {
 export default function Home() {
 	return (
 		<div className='relative w-full h-screen bg-black text-white'>
-			{/* Gemini AI Effect */}
 			<div>
 				<GoogleGeminiEffectDemo />
 			</div>

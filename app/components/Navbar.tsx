@@ -93,8 +93,8 @@ const Navbar: React.FC = () => {
 			animate='visible'
 			className='fixed top-0 left-0 w-full z-50 bg-black backdrop-blur-md border-b border-gray-950 flex justify-between items-center px-6 py-4'
 			style={{
-				boxShadow: '0 4px 20px rgba(147, 51, 234, 0.1)', // Lighter shadow for performance
-				height: '64px', // Explicit height matching RootLayout's pt-16
+				boxShadow: '0 4px 20px rgba(147, 51, 234, 0.1)',
+				height: '64px',
 			}}>
 			{/* Logo */}
 			<Link href='/' className='flex items-center'>
