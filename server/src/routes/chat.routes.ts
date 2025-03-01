@@ -12,6 +12,13 @@ interface AuthenticatedRequest extends Request {
 	};
 }
 
+interface ChatHistoryItem {
+	role: string;
+	parts: { text: string }[];
+	img?: string;
+}
+
+// POST /chats
 router.post(
 	'/chats',
 	requireAuth(),
@@ -21,7 +28,7 @@ router.post(
 				return res.status(401).json({ message: 'Unauthorized' });
 			}
 
-			const { history } = req.body;
+			const { history } = req.body as { history: ChatHistoryItem[] };
 			if (!history || !Array.isArray(history)) {
 				return res
 					.status(400)
@@ -31,7 +38,7 @@ router.post(
 			const chat = await prisma.chat.create({
 				data: {
 					userId: req.auth.userId,
-					history,
+					history: history as unknown as Prisma.InputJsonValue, // Use unknown as intermediary
 				},
 			});
 
@@ -43,6 +50,7 @@ router.post(
 	}
 );
 
+// GET /userchats
 router.get(
 	'/userchats',
 	requireAuth(),
@@ -56,11 +64,13 @@ router.get(
 				where: { userId: req.auth.userId },
 			});
 
-			const chatsWithTitles = chats.map((chat: any) => ({
+			const chatsWithTitles = chats.map((chat) => ({
 				id: chat.id,
 				title:
 					chat.history && Array.isArray(chat.history) && chat.history.length > 0
-						? (chat.history[0] as any).parts[0].text.slice(0, 30)
+						? (
+								chat.history[0] as unknown as ChatHistoryItem
+						  ).parts[0].text.slice(0, 30) // Use unknown as intermediary
 						: 'Untitled Chat',
 				history: chat.history,
 				userId: chat.userId,
@@ -76,6 +86,7 @@ router.get(
 	}
 );
 
+// GET /chats/:id
 router.get(
 	'/chats/:id',
 	requireAuth(),
@@ -104,6 +115,7 @@ router.get(
 	}
 );
 
+// PUT /chats/:id
 router.put(
 	'/chats/:id',
 	requireAuth(),
@@ -115,7 +127,6 @@ router.put(
 
 			const { question, answer, img } = req.body;
 
-			// Require at least question or answer
 			if (!question?.trim() && !answer?.trim()) {
 				return res.status(400).json({ message: 'Question or answer required' });
 			}
@@ -128,7 +139,7 @@ router.put(
 				return res.status(404).json({ message: 'Chat not found' });
 			}
 
-			const newItems = [];
+			const newItems: ChatHistoryItem[] = [];
 			if (question?.trim()) {
 				newItems.push({
 					role: 'user',
@@ -146,7 +157,10 @@ router.put(
 			const updatedChat = await prisma.chat.update({
 				where: { id: req.params.id },
 				data: {
-					history: [...(chat.history as Prisma.JsonArray), ...newItems],
+					history: [
+						...(chat.history as unknown as ChatHistoryItem[]), // Cast from JsonValue
+						...newItems,
+					] as unknown as Prisma.InputJsonValue, // Use unknown as intermediary
 				},
 			});
 
