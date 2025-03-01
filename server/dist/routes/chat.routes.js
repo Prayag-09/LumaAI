@@ -51,7 +51,6 @@ router.get('/userchats', (0, express_2.requireAuth)(), async (req, res) => {
     });
     return res.json({ success: true, data: chatsWithTitles });
 });
-// GET /chats/:id - Fetch a specific chat
 router.get('/chats/:id', (0, express_2.requireAuth)(), async (req, res) => {
     if (!req.auth?.userId) {
         return res.status(401).json({ success: false, message: 'Unauthorized' });
@@ -69,7 +68,6 @@ router.get('/chats/:id', (0, express_2.requireAuth)(), async (req, res) => {
     }
     return res.json({ success: true, data: chat });
 });
-// PUT /chats/:id - Update a chat
 router.put('/chats/:id', (0, express_2.requireAuth)(), async (req, res) => {
     if (!req.auth?.userId) {
         return res.status(401).json({ success: false, message: 'Unauthorized' });
@@ -84,7 +82,7 @@ router.put('/chats/:id', (0, express_2.requireAuth)(), async (req, res) => {
     const chat = await prisma.chat.findFirst({
         where: {
             id: req.params.id,
-            userId: req.auth.userId, // Ensure user owns the chat
+            userId: req.auth.userId,
         },
     });
     if (!chat) {

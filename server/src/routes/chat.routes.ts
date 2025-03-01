@@ -59,7 +59,7 @@ router.get(
 			orderBy: { updatedAt: 'desc' },
 		});
 
-		const chatsWithTitles = chats.map((chat) => {
+		const chatsWithTitles = chats.map((chat : any) => {
 			const history = (JSON.parse(chat.history as unknown as string) as ChatHistoryItem[]) || [];
 			return {
 				id: chat.id,
@@ -78,7 +78,6 @@ router.get(
 	}
 );
 
-// GET /chats/:id - Fetch a specific chat
 router.get(
 	'/chats/:id',
 	requireAuth(),
@@ -104,7 +103,6 @@ router.get(
 	}
 );
 
-// PUT /chats/:id - Update a chat
 router.put(
 	'/chats/:id',
 	requireAuth(),
@@ -124,7 +122,7 @@ router.put(
 		const chat = await prisma.chat.findFirst({
 			where: {
 				id: req.params.id,
-				userId: req.auth.userId, // Ensure user owns the chat
+				userId: req.auth.userId,
 			},
 		});
 
