@@ -158,9 +158,9 @@ router.put(
 				where: { id: req.params.id },
 				data: {
 					history: [
-						...(chat.history as unknown as ChatHistoryItem[]), // Cast from JsonValue
+						...(chat.history as unknown as ChatHistoryItem[]),
 						...newItems,
-					] as unknown as Prisma.InputJsonValue, // Use unknown as intermediary
+					] as unknown as Prisma.InputJsonValue,
 				},
 			});
 
