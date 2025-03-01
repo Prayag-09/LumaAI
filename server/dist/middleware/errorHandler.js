@@ -5,6 +5,7 @@ const errorHandler = (err, req, res, next) => {
     let statusCode = err.statusCode || 500;
     let message = err.message || 'Internal Server Error';
     let errors = err.errors || [];
+    // Handle Prisma errors
     if (err instanceof client_1.Prisma.PrismaClientKnownRequestError) {
         switch (err.code) {
             case 'P2002':
@@ -39,6 +40,7 @@ const errorHandler = (err, req, res, next) => {
         statusCode = 500;
         message = 'Unknown database error';
     }
+    // Handle validation errors
     if (err.name === 'ValidationError') {
         statusCode = 400;
         errors = Object.values(err.errors).map((e) => e.message);

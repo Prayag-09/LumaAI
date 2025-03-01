@@ -3,7 +3,7 @@ import imagekit from '../utils/imagekit';
 
 const router = express.Router();
 
-router.get('/upload', (req: Request, res: Response) => {
+router.get('/upload', async (req: Request, res: Response) => {
 	try {
 		const { signature, expire, token } = imagekit.getAuthenticationParameters();
 		res.json({ signature, expire, token });

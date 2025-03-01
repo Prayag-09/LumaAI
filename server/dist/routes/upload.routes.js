@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const imagekit_1 = __importDefault(require("../utils/imagekit"));
 const router = express_1.default.Router();
-router.get('/upload', (req, res) => {
+router.get('/upload', async (req, res) => {
     try {
         const { signature, expire, token } = imagekit_1.default.getAuthenticationParameters();
         res.json({ signature, expire, token });
