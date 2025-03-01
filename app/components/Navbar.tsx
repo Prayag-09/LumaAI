@@ -5,13 +5,11 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { SignedOut, SignInButton, SignedIn, UserButton } from '@clerk/nextjs';
 
-// Animation variants
 const navbarVariants = {
 	hidden: { opacity: 0, y: -50 },
 	visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
 };
 
-// Animated SVG Logo Component
 const AnimatedLogo: React.FC = () => {
 	return (
 		<motion.svg
@@ -69,7 +67,7 @@ const AnimatedLogo: React.FC = () => {
 				x='15'
 				y='42'
 				className='font-sourcecodepro'
-				fontFamily=', sans-serif'
+				fontFamily='sans-serif'
 				fontSize='34'
 				fontWeight='600'
 				fill='url(#darkGradient)'
@@ -84,7 +82,6 @@ const AnimatedLogo: React.FC = () => {
 	);
 };
 
-// Navbar Component
 const Navbar: React.FC = () => {
 	return (
 		<motion.nav
@@ -96,12 +93,10 @@ const Navbar: React.FC = () => {
 				boxShadow: '0 4px 20px rgba(147, 51, 234, 0.1)',
 				height: '64px',
 			}}>
-			{/* Logo */}
 			<Link href='/' className='flex items-center'>
 				<AnimatedLogo />
 			</Link>
 
-			{/* Navigation */}
 			<div className='flex items-center gap-8 font-bold text-xl font-sourcecodepro'>
 				<SignedIn>
 					<motion.div
@@ -121,27 +116,8 @@ const Navbar: React.FC = () => {
 							/>
 						</Link>
 					</motion.div>
-
-					<motion.div
-						whileHover={{ scale: 1.1, y: -2 }}
-						whileTap={{ scale: 0.95 }}
-						className='relative group'>
-						<Link href='/dashboard/chat' className='relative'>
-							<span className='text-white hover:text-purple-300 transition-colors duration-150'>
-								Chat
-							</span>
-							<motion.span
-								className='absolute bottom-[-4px] left-0 w-full h-0.5 bg-purple-300 rounded-full'
-								initial={{ scaleX: 0 }}
-								whileHover={{ scaleX: 1 }}
-								transition={{ duration: 0.25, ease: 'easeInOut' }}
-								style={{ transformOrigin: 'left' }}
-							/>
-						</Link>
-					</motion.div>
 				</SignedIn>
 
-				{/* Authentication */}
 				<SignedOut>
 					<motion.div
 						whileHover={{ scale: 1.05 }}

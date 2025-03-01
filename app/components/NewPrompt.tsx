@@ -151,7 +151,7 @@ const NewPrompt: React.FC<NewPromptProps> = ({ data }) => {
 				}));
 			}
 		},
-		[img.aiData, chat, mutation, setQuestion] // Dependencies for useCallback
+		[img.aiData, chat, mutation, setQuestion]
 	);
 
 	useEffect(() => {

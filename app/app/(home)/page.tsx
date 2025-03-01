@@ -13,7 +13,7 @@ const emojiSequences: string[] = [
 	'🔍 Unlocking Deeper Insights...',
 ];
 
-// Enhanced Typing Animation Component
+
 const TypingAnimation: React.FC = () => {
 	return (
 		<motion.div

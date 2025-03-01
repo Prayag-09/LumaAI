@@ -20,11 +20,6 @@ app.use('/api', requireAuth(), chatRoutes);
 
 app.use(errorHandler);
 
-// Root route
-app.get('/', (req, res) => {
-	res.status(200).json({ message: 'Server is running' });
-});
-
 app.listen(port, () => {
 	console.log(`Server running on http://localhost:${port}`);
 });

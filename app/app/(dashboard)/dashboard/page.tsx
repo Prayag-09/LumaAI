@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 import { MessageCircle, Image, Code, Brain, Send } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-// Animation variants
+
 const containerVariants = {
 	hidden: { opacity: 0, y: 10 },
 	visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } },

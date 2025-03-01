@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 
-// Animation variants
+
 const sidebarVariants = {
 	hidden: { opacity: 0, x: -25 },
 	visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: 'easeOut' } },
@@ -22,7 +22,7 @@ const listVariants = {
 };
 
 interface Chat {
-	id: string; // Changed from _id to id to match Prisma default
+	id: string;
 	title: string;
 }
 

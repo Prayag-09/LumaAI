@@ -77,12 +77,11 @@ export default function RootLayout({
 					lang='en'
 					className={`${roboto.variable} ${orbitron.variable} ${sourceCodePro.variable}`}>
 					<body className='bg-black text-white min-h-screen flex flex-col'>
-						{/* Fixed Navbar */}
+
 						<div className='fixed top-0 left-0 w-full z-50'>
 							<Navbar />
 						</div>
 
-						{/* Main Content with Navbar Offset */}
 						<main className='flex-1 pt-16'>{children}</main>
 					</body>
 				</html>

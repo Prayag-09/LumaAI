@@ -20,10 +20,6 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.use('/api', (0, express_2.requireAuth)(), upload_routes_1.default);
 app.use('/api', (0, express_2.requireAuth)(), chat_routes_1.default);
 app.use(errorHandler_1.default);
-// Root route
-app.get('/', (req, res) => {
-    res.status(200).json({ message: 'Server is running' });
-});
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });

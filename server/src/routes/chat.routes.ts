@@ -12,7 +12,7 @@ interface AuthenticatedRequest extends Request {
 	};
 }
 
-// Create a new chat
+
 router.post(
 	'/chats',
 	requireAuth(),
@@ -44,7 +44,7 @@ router.post(
 	}
 );
 
-// Get all chats for a user
+
 router.get(
 	'/userchats',
 	requireAuth(),
@@ -78,7 +78,7 @@ router.get(
 	}
 );
 
-// Get a specific chat by ID
+
 router.get(
 	'/chats/:id',
 	requireAuth(),
@@ -107,7 +107,7 @@ router.get(
 	}
 );
 
-// Update a chat
+
 router.put(
 	'/chats/:id',
 	requireAuth(),
@@ -132,7 +132,6 @@ router.put(
 				return res.status(404).json({ message: 'Chat not found' });
 			}
 
-			// Build new history items
 			const newItems = [];
 			if (question?.trim()) {
 				newItems.push({

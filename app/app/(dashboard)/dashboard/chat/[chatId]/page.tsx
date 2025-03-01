@@ -50,7 +50,7 @@ const ChatPage: React.FC = () => {
 		enabled: !!chatId,
 	});
 
-	console.log('ChatPage fetched data:', data); // Debug the full response
+	console.log('ChatPage fetched data:', data);
 
 	return (
 		<div className='flex h-screen bg-black text-white font-orbitron overflow-hidden'>

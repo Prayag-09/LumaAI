@@ -7,7 +7,6 @@ const express_1 = __importDefault(require("express"));
 const express_2 = require("@clerk/express");
 const prisma_1 = __importDefault(require("../prisma"));
 const router = express_1.default.Router();
-// Create a new chat
 router.post('/chats', (0, express_2.requireAuth)(), async (req, res) => {
     try {
         if (!req.auth?.userId) {
@@ -32,7 +31,6 @@ router.post('/chats', (0, express_2.requireAuth)(), async (req, res) => {
         return res.status(500).json({ message: 'Unable to create chat' });
     }
 });
-// Get all chats for a user
 router.get('/userchats', (0, express_2.requireAuth)(), async (req, res) => {
     try {
         if (!req.auth?.userId) {
@@ -58,7 +56,6 @@ router.get('/userchats', (0, express_2.requireAuth)(), async (req, res) => {
         return res.status(500).json({ message: 'Unable to fetch chats' });
     }
 });
-// Get a specific chat by ID
 router.get('/chats/:id', (0, express_2.requireAuth)(), async (req, res) => {
     try {
         if (!req.auth?.userId) {
@@ -80,7 +77,6 @@ router.get('/chats/:id', (0, express_2.requireAuth)(), async (req, res) => {
         return res.status(500).json({ message: 'Error fetching the chat' });
     }
 });
-// Update a chat
 router.put('/chats/:id', (0, express_2.requireAuth)(), async (req, res) => {
     try {
         if (!req.auth?.userId) {
@@ -97,7 +93,6 @@ router.put('/chats/:id', (0, express_2.requireAuth)(), async (req, res) => {
         if (!chat) {
             return res.status(404).json({ message: 'Chat not found' });
         }
-        // Build new history items
         const newItems = [];
         if (question?.trim()) {
             newItems.push({
