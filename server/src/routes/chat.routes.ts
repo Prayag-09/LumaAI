@@ -1,8 +1,9 @@
 import express from 'express';
 import { Request, Response } from 'express';
 import { requireAuth } from '@clerk/express';
-import { Prisma } from '@prisma/client';
-import prisma from '../prisma';
+import { Prisma, PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 const router = express.Router();
 

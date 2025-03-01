@@ -5,7 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const express_2 = require("@clerk/express");
-const prisma_1 = __importDefault(require("../prisma"));
+const client_1 = require("@prisma/client");
+const prisma = new client_1.PrismaClient();
 const router = express_1.default.Router();
 router.post('/chats', (0, express_2.requireAuth)(), async (req, res) => {
     try {
@@ -18,7 +19,7 @@ router.post('/chats', (0, express_2.requireAuth)(), async (req, res) => {
                 .status(400)
                 .json({ message: 'Chat history is required and must be an array' });
         }
-        const chat = await prisma_1.default.chat.create({
+        const chat = await prisma.chat.create({
             data: {
                 userId: req.auth.userId,
                 history,
@@ -36,7 +37,7 @@ router.get('/userchats', (0, express_2.requireAuth)(), async (req, res) => {
         if (!req.auth?.userId) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
-        const chats = await prisma_1.default.chat.findMany({
+        const chats = await prisma.chat.findMany({
             where: { userId: req.auth.userId },
         });
         const chatsWithTitles = chats.map((chat) => ({
@@ -61,7 +62,7 @@ router.get('/chats/:id', (0, express_2.requireAuth)(), async (req, res) => {
         if (!req.auth?.userId) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
-        const chat = await prisma_1.default.chat.findFirst({
+        const chat = await prisma.chat.findFirst({
             where: {
                 userId: req.auth.userId,
                 id: req.params.id,
@@ -86,7 +87,7 @@ router.put('/chats/:id', (0, express_2.requireAuth)(), async (req, res) => {
         if (!question?.trim() && !answer?.trim()) {
             return res.status(400).json({ message: 'Question or answer required' });
         }
-        const chat = await prisma_1.default.chat.findUnique({
+        const chat = await prisma.chat.findUnique({
             where: { id: req.params.id },
         });
         if (!chat) {
@@ -106,7 +107,7 @@ router.put('/chats/:id', (0, express_2.requireAuth)(), async (req, res) => {
                 parts: [{ text: answer.trim() }],
             });
         }
-        const updatedChat = await prisma_1.default.chat.update({
+        const updatedChat = await prisma.chat.update({
             where: { id: req.params.id },
             data: {
                 history: [...chat.history, ...newItems],

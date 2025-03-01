@@ -4,7 +4,7 @@
 	"main": "dist/server.js",
 	"scripts": {
 		"dev": "nodemon --ext ts --exec 'tsc && node dist/server.js'",
-		"build": "tsc && npx prisma generate --schema src/prisma/schema.prisma && npx prisma db push --schema src/prisma/schema.prisma",
+		"build": "npm install && tsc && npx prisma generate --schema src/prisma/schema.prisma && npx prisma db push --schema src/prisma/schema.prisma",
 		"start": "node dist/server.js",
 		"test": "echo \"No tests specified\" && exit 1",
 		"prisma:generate": "npx prisma generate --schema src/prisma/schema.prisma",
