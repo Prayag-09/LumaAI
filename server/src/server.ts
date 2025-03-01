@@ -8,7 +8,7 @@ import errorHandler from './middleware/errorHandler';
 
 dotenv.config();
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 10000;
 const CLIENT_URL = process.env.CLIENT_URL;
 
 app.use(cors({ origin: CLIENT_URL, credentials: true }));

@@ -12,7 +12,7 @@ const upload_routes_1 = __importDefault(require("./routes/upload.routes"));
 const errorHandler_1 = __importDefault(require("./middleware/errorHandler"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const port = process.env.PORT;
+const port = process.env.PORT || 10000;
 const CLIENT_URL = process.env.CLIENT_URL;
 app.use((0, cors_1.default)({ origin: CLIENT_URL, credentials: true }));
 app.use(express_1.default.json());
