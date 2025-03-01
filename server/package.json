@@ -4,9 +4,12 @@
 	"main": "dist/server.js",
 	"scripts": {
 		"dev": "nodemon --ext ts --exec 'tsc && node dist/server.js'",
-		"build": "tsc",
+		"build": "tsc && npx prisma generate --schema src/prisma/schema.prisma && npx prisma db push --schema src/prisma/schema.prisma",
 		"start": "node dist/server.js",
-		"test": "echo \"No tests specified\" && exit 1"
+		"test": "echo \"No tests specified\" && exit 1",
+		"prisma:generate": "npx prisma generate --schema src/prisma/schema.prisma",
+		"prisma:push": "npx prisma db push --schema src/prisma/schema.prisma",
+		"prisma:migrate": "npx prisma migrate dev --schema src/prisma/schema.prisma"
 	},
 	"author": "",
 	"license": "ISC",
