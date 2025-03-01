@@ -31,14 +31,12 @@ const DashboardPage: React.FC = () => {
 	const queryClient = useQueryClient();
 	const [prompt, setPrompt] = useState<string>('');
 
-	// Redirect if not authenticated
 	useEffect(() => {
 		if (isLoaded && !userId) {
 			router.push('/sign-in');
 		}
 	}, [isLoaded, userId, router]);
 
-	// Mutation to create a new chat
 	const mutation = useMutation({
 		mutationFn: (text: string) =>
 			fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/chats`, {
@@ -47,30 +45,30 @@ const DashboardPage: React.FC = () => {
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({ text }),
+				body: JSON.stringify({
+					history: [{ role: 'user', parts: [{ text }] }],
+				}),
 			}).then((res) => {
 				if (!res.ok) throw new Error('Failed to create chat');
-				return res.json(); // Expecting { id: string } or { _id: string }
+				return res.json();
 			}),
 		onSuccess: (data) => {
 			queryClient.invalidateQueries({ queryKey: ['userChats'] });
-			router.push(`/chat/${data.id || data._id}`);
+			router.push(`/dashboard/chat/${data.id}`);
 		},
 		onError: (error) => {
 			console.error('Error creating chat:', error);
+			alert('Failed to create chat. Please try again.');
 		},
 	});
 
-	// Handle form submission
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const text = prompt.trim();
 		if (!text) return;
-
-		mutation.mutate(text);
+		mutation.mutate(text, { onSuccess: () => setPrompt('') });
 	};
 
-	// Memoized feature list
 	const featureList = useMemo(
 		() => [
 			{ icon: MessageCircle, label: 'Chat', desc: 'Talk to AI agents' },
@@ -81,7 +79,6 @@ const DashboardPage: React.FC = () => {
 		[]
 	);
 
-	// Loading state
 	if (!isLoaded) {
 		return (
 			<div className='flex h-screen items-center justify-center bg-black text-gray-300 font-sourcecodepro'>
@@ -98,16 +95,12 @@ const DashboardPage: React.FC = () => {
 
 	return (
 		<div className='flex h-screen bg-black text-white overflow-hidden font-sourcecodepro'>
-			{/* Sidebar */}
 			<ChatList />
-
-			{/* Main Content */}
 			<motion.main
 				variants={containerVariants}
 				initial='hidden'
 				animate='visible'
 				className='flex-1 flex flex-col items-center justify-between bg-black py-6 px-8 relative min-w-0'>
-				{/* Feature Icons */}
 				<motion.div
 					variants={featureVariants}
 					initial='hidden'
@@ -136,7 +129,6 @@ const DashboardPage: React.FC = () => {
 					))}
 				</motion.div>
 
-				{/* Typing Section */}
 				<motion.div
 					className='w-full max-w-4xl items-center absolute'
 					variants={inputVariants}
@@ -144,7 +136,7 @@ const DashboardPage: React.FC = () => {
 					animate={prompt.length > 0 ? 'down' : 'center'}
 					transition={{ duration: 0.3, ease: 'easeOut' }}
 					style={{
-						left: '30%',
+						left: '50%',
 						transform: 'translateX(-50%)',
 						zIndex: 10,
 					}}>
@@ -176,7 +168,6 @@ const DashboardPage: React.FC = () => {
 					)}
 				</motion.div>
 
-				{/* Spacer */}
 				<div className='h-28' />
 			</motion.main>
 		</div>

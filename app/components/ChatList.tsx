@@ -22,20 +22,23 @@ const listVariants = {
 };
 
 interface Chat {
-	_id: string;
+	id: string; // Changed from _id to id to match Prisma default
 	title: string;
 }
 
 const ChatList: React.FC = () => {
 	const { isPending, error, data } = useQuery<Chat[]>({
 		queryKey: ['userChats'],
-		queryFn: () =>
-			fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/userchats`, {
-				credentials: 'include',
-			}).then((res) => {
-				if (!res.ok) throw new Error('Failed to fetch chats');
-				return res.json();
-			}),
+		queryFn: async () => {
+			const res = await fetch(
+				`${process.env.NEXT_PUBLIC_API_URL}/api/userchats`,
+				{
+					credentials: 'include',
+				}
+			);
+			if (!res.ok) throw new Error('Failed to fetch chats');
+			return res.json();
+		},
 		staleTime: 5 * 60 * 1000,
 	});
 
@@ -75,6 +78,7 @@ const ChatList: React.FC = () => {
 				<AnimatePresence>
 					{isPending ? (
 						<motion.div
+							key='loading'
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							exit={{ opacity: 0 }}
@@ -83,6 +87,7 @@ const ChatList: React.FC = () => {
 						</motion.div>
 					) : error ? (
 						<motion.div
+							key='error'
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							exit={{ opacity: 0 }}
@@ -92,7 +97,7 @@ const ChatList: React.FC = () => {
 					) : data && data.length > 0 ? (
 						data.map((chat, index) => (
 							<motion.div
-								key={chat._id}
+								key={chat.id} // Use chat.id instead of chat._id
 								custom={index}
 								variants={listVariants}
 								initial='hidden'
@@ -100,13 +105,16 @@ const ChatList: React.FC = () => {
 								exit='exit'
 								whileHover={{ scale: 1.02, backgroundColor: '#0F172A' }}
 								className='px-3 py-2 rounded-md bg-black text-sm text-white hover:text-gray-200 transition-colors duration-100 cursor-pointer'>
-								<Link href={`/chat/${chat._id}`} className='block truncate'>
+								<Link
+									href={`/dashboard/chat/${chat.id}`}
+									className='block truncate'>
 									{chat.title}
 								</Link>
 							</motion.div>
 						))
 					) : (
 						<motion.div
+							key='empty'
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							exit={{ opacity: 0 }}
@@ -130,7 +138,7 @@ const ChatList: React.FC = () => {
 				<p className='text-sm font-semibold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-950'>
 					Upgrade to Pro
 				</p>
-				<span className='text-xs  text-gray-400 block mt-1'>
+				<span className='text-xs text-gray-400 block mt-1'>
 					Unlock limitless AI power
 				</span>
 				<Link
