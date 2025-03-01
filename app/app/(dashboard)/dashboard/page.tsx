@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 import { MessageCircle, Image, Code, Brain, Send } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-
+// Animation Variants
 const containerVariants = {
 	hidden: { opacity: 0, y: 10 },
 	visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
@@ -42,9 +42,7 @@ const DashboardPage: React.FC = () => {
 			fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/chats`, {
 				method: 'POST',
 				credentials: 'include',
-				headers: {
-					'Content-Type': 'application/json',
-				},
+				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					history: [{ role: 'user', parts: [{ text }] }],
 				}),
@@ -55,6 +53,7 @@ const DashboardPage: React.FC = () => {
 		onSuccess: (data) => {
 			queryClient.invalidateQueries({ queryKey: ['userChats'] });
 			router.push(`/dashboard/chat/${data.id}`);
+			setPrompt('');
 		},
 		onError: (error) => {
 			console.error('Error creating chat:', error);
@@ -66,7 +65,7 @@ const DashboardPage: React.FC = () => {
 		e.preventDefault();
 		const text = prompt.trim();
 		if (!text) return;
-		mutation.mutate(text, { onSuccess: () => setPrompt('') });
+		mutation.mutate(text);
 	};
 
 	const featureList = useMemo(
@@ -81,7 +80,7 @@ const DashboardPage: React.FC = () => {
 
 	if (!isLoaded) {
 		return (
-			<div className='flex h-screen items-center justify-center bg-black text-gray-300 font-sourcecodepro'>
+			<div className='flex h-screen items-center justify-center bg-black text-gray-400 font-orbitron'>
 				<motion.div
 					initial={{ opacity: 0, scale: 0.9 }}
 					animate={{ opacity: 1, scale: 1 }}
@@ -94,7 +93,7 @@ const DashboardPage: React.FC = () => {
 	}
 
 	return (
-		<div className='flex h-screen bg-black text-white overflow-hidden font-sourcecodepro'>
+		<div className='flex h-screen bg-black text-white overflow-hidden font-orbitron'>
 			<ChatList />
 			<motion.main
 				variants={containerVariants}
@@ -109,22 +108,18 @@ const DashboardPage: React.FC = () => {
 					{featureList.map((item, index) => (
 						<motion.div
 							key={item.label}
-							className='flex flex-col items-center text-center p-4 rounded-lg bg-gray-950/90 border border-gray-950 hover:bg-gray-950 transition-all duration-200 w-36 shadow-sm'
+							className='flex flex-col items-center text-center p-4 rounded-md bg-gray-950 border border-gray-950 hover:bg-[#0F172A] transition-all duration-150 w-36 shadow-sm'
 							whileHover={{
-								scale: 1.05,
-								boxShadow: '0 0 12px rgba(147, 51, 234, 0.25)',
+								scale: 1.02,
+								boxShadow: '0 0 10px rgba(147, 51, 234, 0.15)',
 							}}
 							whileTap={{ scale: 0.95 }}
 							initial={{ opacity: 0, y: 10 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ duration: 0.25, delay: 0.2 + index * 0.1 }}>
 							<item.icon className='w-9 h-9 text-purple-400 mb-3' />
-							<p className='text-lg font-semibold text-white font-sourcecodepro'>
-								{item.label}
-							</p>
-							<p className='text-sm text-gray-400 mt-1 font-sourcecodepro'>
-								{item.desc}
-							</p>
+							<p className='text-lg font-semibold text-white'>{item.label}</p>
+							<p className='text-sm text-gray-400 mt-1'>{item.desc}</p>
 						</motion.div>
 					))}
 				</motion.div>
@@ -136,7 +131,7 @@ const DashboardPage: React.FC = () => {
 					animate={prompt.length > 0 ? 'down' : 'center'}
 					transition={{ duration: 0.3, ease: 'easeOut' }}
 					style={{
-						left: '50%',
+						left: '30%',
 						transform: 'translateX(-50%)',
 						zIndex: 10,
 					}}>
@@ -145,8 +140,8 @@ const DashboardPage: React.FC = () => {
 							type='text'
 							value={prompt}
 							onChange={(e) => setPrompt(e.target.value)}
-							placeholder='Ask LumaAI anything....'
-							className='w-full p-4 pr-16 rounded-2xl bg-gray-950 text-white border border-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-400 placeholder-gray-500 text-base shadow-md hover:shadow-lg transition-shadow duration-200 font-sourcecodepro'
+							placeholder='Ask LumaAI anything...'
+							className='w-full p-4 pr-16 rounded-md bg-gray-950 text-white border border-gray-950 focus:outline-none focus:ring-2 focus:ring-purple-400 placeholder-gray-400 text-base transition-all duration-150'
 							disabled={mutation.isPending}
 						/>
 						<motion.button
@@ -162,7 +157,7 @@ const DashboardPage: React.FC = () => {
 						<motion.div
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
-							className='absolute left-0 right-0 text-center text-sm text-gray-400 mt-2 font-sourcecodepro'>
+							className='absolute left-0 right-0 text-center text-sm text-gray-400 mt-2'>
 							Creating chat...
 						</motion.div>
 					)}

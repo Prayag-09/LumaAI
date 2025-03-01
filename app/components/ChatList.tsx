@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 
-
 const sidebarVariants = {
 	hidden: { opacity: 0, x: -25 },
 	visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: 'easeOut' } },
@@ -47,7 +46,7 @@ const ChatList: React.FC = () => {
 			variants={sidebarVariants}
 			initial='hidden'
 			animate='visible'
-			className='w-64 h-screen bg-black text-white font-orbitron border-r border-gray-950 flex flex-col pt-16 pb-4 px-4 fixed top-0 left-0 z-40 overflow-hidden'
+			className='w-64 h-screen bg-black text-white border-r font-orbitron font-semibold border-gray-950 flex flex-col pt-16 pb-4 px-4 fixed top-0 left-0 z-40 overflow-hidden'
 			style={{ willChange: 'opacity, transform' }}>
 			{/* Title */}
 			<motion.h1
@@ -60,10 +59,10 @@ const ChatList: React.FC = () => {
 			</motion.h1>
 
 			{/* Navigation Links */}
-			<div className='flex flex-col space-y-3 mt-6 text-sm'>
+			<div className='flex flex-col space-y-3 mt-6 text-lg'>
 				<Link
 					href='/'
-					className='flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-150'>
+					className='flex items-center gap-2 text-gray-400  hover:text-white transition-colors duration-150'>
 					<span className='text-purple-400'>↓</span> Explore
 				</Link>
 				<Link
@@ -82,7 +81,7 @@ const ChatList: React.FC = () => {
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							exit={{ opacity: 0 }}
-							className='text-gray-400 text-sm text-center py-2'>
+							className='text-gray-400 text-base text-center py-2'>
 							Loading...
 						</motion.div>
 					) : error ? (
@@ -97,14 +96,14 @@ const ChatList: React.FC = () => {
 					) : data && data.length > 0 ? (
 						data.map((chat, index) => (
 							<motion.div
-								key={chat.id} // Use chat.id instead of chat._id
+								key={chat.id}
 								custom={index}
 								variants={listVariants}
 								initial='hidden'
 								animate='visible'
 								exit='exit'
-								whileHover={{ scale: 1.02, backgroundColor: '#0F172A' }}
-								className='px-3 py-2 rounded-md bg-black text-sm text-white hover:text-gray-200 transition-colors duration-100 cursor-pointer'>
+								whileHover={{ scale: 1.09, backgroundColor: '#0F172A' }}
+								className='px-3 py-2 rounded-md bg-black text-base font-black text-white hover:text-gray-200 transition-colors duration-100 cursor-pointer'>
 								<Link
 									href={`/dashboard/chat/${chat.id}`}
 									className='block truncate'>

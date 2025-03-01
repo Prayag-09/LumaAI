@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { IKImage } from 'imagekitio-next';
+import { IKImage } from 'imagekitio-react';
 import Markdown from 'react-markdown';
 import { Send } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -203,7 +203,7 @@ const NewPrompt: React.FC<NewPromptProps> = ({ data }) => {
 			)}
 
 			{question && (
-				<div className='p-3 rounded-lg bg-gray-800 text-white shadow-sm max-w-2xl mx-auto text-right mb-4'>
+				<div className='p-3 rounded-lg font-bold bg-gray-800 text-white shadow-sm max-w-2xl mx-auto text-right mb-4'>
 					<Markdown>{question}</Markdown>
 				</div>
 			)}
@@ -220,15 +220,12 @@ const NewPrompt: React.FC<NewPromptProps> = ({ data }) => {
 				onSubmit={handleSubmit}
 				ref={formRef}
 				className='relative flex items-center mt-4'>
-				<label htmlFor='file' className='mr-2 text-purple-400 cursor-pointer'>
-					Upload Image
-				</label>
 				<Upload setImg={setImg} />
 				<input
 					type='text'
 					name='text'
 					placeholder='Ask anything...'
-					className='w-full p-4 pr-16 rounded-2xl bg-gray-950 text-white border border-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-400 placeholder-gray-500 text-base shadow-md hover:shadow-lg transition-shadow duration-200 font-orbitron'
+					className='w-full p-4 pr-16 rounded-2xl bg-gray-950 text-white border border-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-400 placeholder-gray-500 text-base shadow-md hover:shadow-lg transition-shadow duration-200'
 					disabled={mutation.isPending}
 					value={question}
 					onChange={(e) => setQuestion(e.target.value)}

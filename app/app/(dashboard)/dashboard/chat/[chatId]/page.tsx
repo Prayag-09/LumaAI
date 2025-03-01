@@ -4,7 +4,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import Markdown from 'react-markdown';
-import { IKImage } from 'imagekitio-next';
+import { IKImage } from 'imagekitio-react';
 import ChatList from '@/components/ChatList';
 import NewPrompt from '@/components/NewPrompt';
 import { useParams } from 'next/navigation';
@@ -51,28 +51,32 @@ const ChatPage: React.FC = () => {
 	});
 
 	console.log('ChatPage fetched data:', data);
+	console.log(
+		'History with images:',
+		data?.history.map((msg) => ({ role: msg.role, img: msg.img }))
+	); // Debug: Check image presence
 
 	return (
-		<div className='flex h-screen bg-black text-white font-orbitron overflow-hidden'>
+		<div className='flex h-screen bg-black text-white overflow-hidden font-inter'>
 			<ChatList />
 			<motion.main
 				variants={containerVariants}
 				initial='hidden'
 				animate='visible'
-				className='flex-1 flex flex-col bg-black py-6 px-8 relative min-w-0'>
-				<div className='flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-950 scrollbar-track-black'>
+				className='flex-1 flex flex-col bg-black py-6 px-4 relative min-w-0 overflow-x-hidden'>
+				<div className='flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-950 scrollbar-track-black max-w-4xl mx-auto w-full'>
 					{isPending ? (
 						<motion.div
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
-							className='text-gray-400 text-center py-4'>
+							className='text-gray-400 text-center py-2'>
 							Loading...
 						</motion.div>
 					) : error ? (
 						<motion.div
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
-							className='text-red-400 text-center py-4'>
+							className='text-red-400 text-center py-2'>
 							Something went wrong: {error.message}
 						</motion.div>
 					) : data?.history?.length > 0 ? (
@@ -83,29 +87,37 @@ const ChatPage: React.FC = () => {
 								initial='hidden'
 								animate='visible'
 								custom={i}
-								className='mb-4'>
-								{message.img && (
-									<div className='relative inline-block w-[400px] h-[300px]'>
-										<IKImage
-											urlEndpoint={
-												process.env.NEXT_PUBLIC_IMAGE_KIT_ENDPOINT || ''
-											}
-											path={message.img}
-											width={400}
-											height={300}
-											transformation={[{ width: '400', height: '300' }]}
-											loading='lazy'
-											lqip={{ active: true, quality: 20 }}
-											className='rounded-md shadow-md mb-2 object-cover'
-											alt='Uploaded Image'
-										/>
-									</div>
-								)}
+								className='mb-3 flex justify-between items-start w-full'>
 								<div
-									className={`p-3 rounded-lg bg-gray-950/90 border border-gray-950 text-white shadow-sm max-w-2xl mx-auto ${
-										message.role === 'user' ? 'bg-gray-800 text-right' : ''
-									}`}>
-									<Markdown>{message.parts[0]?.text || ''}</Markdown>
+									className={`flex flex-col ${
+										message.role === 'user'
+											? 'items-end justify-end'
+											: 'items-start justify-start'
+									} w-full max-w-[calc(100%-20px)]`}>
+									{message.img && (
+										<div className='relative mb-2'>
+											<IKImage
+												urlEndpoint={
+													process.env.NEXT_PUBLIC_IMAGE_KIT_ENDPOINT ?? ''
+												}
+												path={message.img}
+												width={300} // Increased from 150 to 300
+												transformation={[{ width: '300' }]} // Updated transformation
+												loading='lazy'
+												lqip={{ active: true, quality: 20 }}
+												className='rounded-md shadow-md object-cover max-w-[300px] max-h-[300px] block' // Increased max dimensions
+												alt='Uploaded Image'
+											/>
+										</div>
+									)}
+									<div
+										className={`p-2 rounded-md bg-gray-950/90 border border-gray-900 text-white shadow-sm ${
+											message.role === 'user'
+												? 'bg-gray-800 text-right font-semibold'
+												: 'font-medium'
+										} text-sm md:text-base leading-relaxed max-w-[70%] break-words`}>
+										<Markdown>{message.parts[0]?.text ?? ''}</Markdown>
+									</div>
 								</div>
 							</motion.div>
 						))
@@ -113,7 +125,7 @@ const ChatPage: React.FC = () => {
 						<motion.div
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
-							className='text-gray-400 text-center py-4'>
+							className='text-gray-400 text-center py-2'>
 							No messages yet
 						</motion.div>
 					)}
