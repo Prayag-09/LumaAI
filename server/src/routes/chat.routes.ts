@@ -12,7 +12,6 @@ interface AuthenticatedRequest extends Request {
 	};
 }
 
-
 router.post(
 	'/chats',
 	requireAuth(),
@@ -43,7 +42,6 @@ router.post(
 		}
 	}
 );
-
 
 router.get(
 	'/userchats',
@@ -78,7 +76,6 @@ router.get(
 	}
 );
 
-
 router.get(
 	'/chats/:id',
 	requireAuth(),
@@ -107,7 +104,6 @@ router.get(
 	}
 );
 
-
 router.put(
 	'/chats/:id',
 	requireAuth(),
@@ -118,8 +114,6 @@ router.put(
 			}
 
 			const { question, answer, img } = req.body;
-
-			// Require at least question or answer
 			if (!question?.trim() && !answer?.trim()) {
 				return res.status(400).json({ message: 'Question or answer required' });
 			}
@@ -153,7 +147,6 @@ router.put(
 					history: [...(chat.history as Prisma.JsonArray), ...newItems],
 				},
 			});
-
 			return res.status(200).json(updatedChat);
 		} catch (error) {
 			console.error('Error updating chat:', error);

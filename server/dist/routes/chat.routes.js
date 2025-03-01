@@ -83,7 +83,6 @@ router.put('/chats/:id', (0, express_2.requireAuth)(), async (req, res) => {
             return res.status(401).json({ message: 'Unauthorized' });
         }
         const { question, answer, img } = req.body;
-        // Require at least question or answer
         if (!question?.trim() && !answer?.trim()) {
             return res.status(400).json({ message: 'Question or answer required' });
         }
