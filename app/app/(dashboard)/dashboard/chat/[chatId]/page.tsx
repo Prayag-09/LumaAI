@@ -24,7 +24,7 @@ const messageVariants = {
 };
 
 interface ChatMessage {
-	role: 'user' | 'assistant';
+	role: 'user' | 'model';
 	parts: { text: string }[];
 	img?: string;
 }

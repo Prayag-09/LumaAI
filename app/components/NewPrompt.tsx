@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { IKImage } from 'imagekitio-next';
 import Markdown from 'react-markdown';
@@ -22,14 +22,21 @@ interface NewPromptProps {
 	};
 }
 
+interface ImgState {
+	isLoading: boolean;
+	error: string;
+	dbData: { filePath?: string };
+	aiData: { inlineData?: { data: string; mimeType: string } };
+}
+
 const NewPrompt: React.FC<NewPromptProps> = ({ data }) => {
 	const [question, setQuestion] = useState('');
 	const [answer, setAnswer] = useState('');
-	const [img, setImg] = useState({
+	const [img, setImg] = useState<ImgState>({
 		isLoading: false,
 		error: '',
-		dbData: {} as { filePath?: string },
-		aiData: {} as { inlineData?: { data: string; mimeType: string } },
+		dbData: {},
+		aiData: {},
 	});
 
 	console.log('NewPrompt data received:', data);
@@ -51,7 +58,7 @@ const NewPrompt: React.FC<NewPromptProps> = ({ data }) => {
 		endRef.current?.scrollIntoView({ behavior: 'smooth' });
 	}, [question, answer, img.dbData]);
 
-	const mutation = useMutation({
+	const mutation = useMutation<unknown, Error>({
 		mutationFn: async () => {
 			if (!data.id) throw new Error('Chat ID is undefined');
 			if (!question.trim() && !answer.trim()) {
@@ -84,13 +91,12 @@ const NewPrompt: React.FC<NewPromptProps> = ({ data }) => {
 		onSuccess: (updatedData) => {
 			console.log('Updated chat data:', updatedData);
 			queryClient.invalidateQueries({ queryKey: ['chat', data.id] });
-			// Reset state only after the UI has had a chance to render
 			formRef.current?.reset();
 			setQuestion('');
-			setAnswer(''); // Keep this to clear after rendering
+			setAnswer('');
 			setImg({ isLoading: false, error: '', dbData: {}, aiData: {} });
 		},
-		onError: (err: any) => {
+		onError: (err: Error) => {
 			console.error('Mutation error:', err);
 			setImg((prev) => ({
 				...prev,
@@ -99,52 +105,54 @@ const NewPrompt: React.FC<NewPromptProps> = ({ data }) => {
 		},
 	});
 
-	const add = async (text: string, isInitial: boolean) => {
-		console.log(
-			'Add function called with text:',
-			text,
-			'isInitial:',
-			isInitial
-		);
-		if (!text?.trim()) {
-			console.warn('Empty or invalid text skipped:', text);
-			return;
-		}
-		if (!isInitial) setQuestion(text);
-
-		try {
-			const requestContent = img.aiData?.inlineData
-				? [{ inlineData: img.aiData.inlineData }, { text: text.trim() }]
-				: [text.trim()];
-
-			console.log('Sending message to Gemini with request:', requestContent);
-			if (img.aiData?.inlineData) {
-				console.log(
-					'Image mimeType being sent:',
-					img.aiData.inlineData.mimeType
-				);
+	const add = useCallback(
+		async (text: string, isInitial: boolean) => {
+			console.log(
+				'Add function called with text:',
+				text,
+				'isInitial:',
+				isInitial
+			);
+			if (!text?.trim()) {
+				console.warn('Empty or invalid text skipped:', text);
+				return;
 			}
+			if (!isInitial) setQuestion(text);
 
-			const result = await chat.sendMessageStream(requestContent);
-			let accumulatedText = '';
-			for await (const chunk of result.stream) {
-				const chunkText = chunk.text();
-				console.log('Stream chunk:', chunkText);
-				accumulatedText += chunkText;
-				setAnswer(accumulatedText); // Update answer incrementally for real-time display
+			try {
+				const requestContent = img.aiData?.inlineData
+					? [{ inlineData: img.aiData.inlineData }, { text: text.trim() }]
+					: [text.trim()];
+
+				console.log('Sending message to Gemini with request:', requestContent);
+				if (img.aiData?.inlineData) {
+					console.log(
+						'Image mimeType being sent:',
+						img.aiData.inlineData.mimeType
+					);
+				}
+
+				const result = await chat.sendMessageStream(requestContent);
+				let accumulatedText = '';
+				for await (const chunk of result.stream) {
+					const chunkText = chunk.text();
+					console.log('Stream chunk:', chunkText);
+					accumulatedText += chunkText;
+					setAnswer(accumulatedText);
+				}
+				console.log('Stream completed, accumulated text:', accumulatedText);
+
+				mutation.mutate();
+			} catch (err) {
+				console.error('Error sending message:', err);
+				setImg((prev) => ({
+					...prev,
+					error: 'Failed to process image or message',
+				}));
 			}
-			console.log('Stream completed, accumulated text:', accumulatedText);
-
-			// Trigger mutation after answer is fully set
-			mutation.mutate();
-		} catch (err) {
-			console.error('Error sending message:', err);
-			setImg((prev) => ({
-				...prev,
-				error: 'Failed to process image or message',
-			}));
-		}
-	};
+		},
+		[img.aiData, chat, mutation, setQuestion] // Dependencies for useCallback
+	);
 
 	useEffect(() => {
 		if (
@@ -155,7 +163,7 @@ const NewPrompt: React.FC<NewPromptProps> = ({ data }) => {
 			add(data.history[0].parts[0].text, true);
 		}
 		hasRun.current = true;
-	}, [data]);
+	}, [data, add]);
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();

@@ -36,6 +36,7 @@ const authenticator = async () => {
 		}
 
 		const data = await response.json();
+		console.log('Authentication response:', data);
 		if (!data.signature || !data.expire || !data.token) {
 			throw new Error('Invalid authentication response');
 		}
@@ -44,25 +45,41 @@ const authenticator = async () => {
 			expire: data.expire,
 			token: data.token,
 		};
-	} catch (error: any) {
+	} catch (error: unknown) {
 		console.error('Authenticator error:', error);
-		throw new Error(`Authentication request failed: ${error.message}`);
+		throw new Error(
+			`Authentication request failed: ${(error as Error).message}`
+		);
 	}
 };
 
-const Upload: React.FC<{ setImg: (img: any) => void }> = ({ setImg }) => {
+interface ImgState {
+	isLoading: boolean;
+	error: string;
+	dbData: { filePath?: string };
+	aiData: { inlineData?: { data: string; mimeType: string } };
+}
+
+interface UploadResponse {
+	filePath?: string;
+	url: string;
+	fileType: string;
+}
+
+const Upload: React.FC<{ setImg: (img: ImgState) => void }> = ({ setImg }) => {
 	const ikUploadRef = useRef<HTMLInputElement>(null);
 
-	const onError = (err: any) => {
+	const onError = (err: Error) => {
 		console.error('Upload Error:', err);
-		setImg((prev: any) => ({
-			...prev,
+		setImg({
 			isLoading: false,
 			error: err.message || 'Failed to upload image',
-		}));
+			dbData: {},
+			aiData: {},
+		});
 	};
 
-	const onSuccess = async (res: any) => {
+	const onSuccess = async (res: UploadResponse) => {
 		console.log('Upload Success:', res);
 		console.log('Raw fileType from ImageKit:', res.fileType);
 
@@ -74,7 +91,7 @@ const Upload: React.FC<{ setImg: (img: any) => void }> = ({ setImg }) => {
 			const base64Data = (reader.result as string).split(',')[1];
 			let mimeType = res.fileType?.toLowerCase() || 'image/png';
 			if (!mimeType.startsWith('image/') || mimeType === 'image') {
-				mimeType = 'image/png'; // Default to PNG if invalid or vague
+				mimeType = 'image/png';
 			} else if (
 				!['image/png', 'image/jpeg', 'image/webp'].includes(mimeType)
 			) {
@@ -86,9 +103,9 @@ const Upload: React.FC<{ setImg: (img: any) => void }> = ({ setImg }) => {
 
 			console.log('Final mimeType set:', mimeType);
 
-			setImg((prev: any) => ({
-				...prev,
+			setImg({
 				isLoading: false,
+				error: '',
 				dbData: { filePath: res.filePath || res.url },
 				aiData: {
 					inlineData: {
@@ -96,20 +113,24 @@ const Upload: React.FC<{ setImg: (img: any) => void }> = ({ setImg }) => {
 						mimeType: mimeType,
 					},
 				},
-			}));
+			});
 		};
 	};
 
-	const onUploadProgress = (progress: any) => {
+	const onUploadProgress = (progress: ProgressEvent) => {
 		console.log('Upload Progress:', progress);
 	};
 
-	const onUploadStart = () => {
-		setImg((prev: any) => ({
-			...prev,
-			isLoading: true,
-			error: '',
-		}));
+	const onUploadStart = (evt: React.ChangeEvent<HTMLInputElement>) => {
+		const file = evt.target.files?.[0];
+		if (file) {
+			setImg({
+				isLoading: true,
+				error: '',
+				dbData: {},
+				aiData: {},
+			});
+		}
 	};
 
 	return (
