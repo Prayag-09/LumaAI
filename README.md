@@ -7,6 +7,13 @@
 
 Welcome to **LumaAI**, a cutting-edge Next.js-based chat application powered by Google Generative AI (Gemini) and ImageKit for seamless image uploads. This project showcases a dynamic, interactive chat experience with robust backend support, designed for developers and AI enthusiasts alike. 🚀
 
+
+## Demo Video
+
+
+https://github.com/user-attachments/assets/c2f84999-bfe9-448b-b370-3adc2db7f43c
+
+
 ## Table of Contents 📋
 
 - [Project Overview](#project-overview)
