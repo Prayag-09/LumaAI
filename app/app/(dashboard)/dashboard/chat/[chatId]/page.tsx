@@ -19,7 +19,7 @@ const messageVariants = {
 	visible: (i: number) => ({
 		opacity: 1,
 		y: 0,
-		transition: { duration: 0.25, delay: i * 0.1 },
+		transition: { duration: 0.25, delay: i * 0.05 },
 	}),
 };
 
@@ -50,72 +50,71 @@ const ChatPage: React.FC = () => {
 		enabled: !!chatId,
 	});
 
-	console.log('ChatPage fetched data:', data);
-	console.log(
-		'History with images:',
-		data?.history.map((msg) => ({ role: msg.role, img: msg.img }))
-	); // Debug: Check image presence
-
 	return (
-		<div className='flex h-screen bg-black text-white overflow-hidden font-inter'>
+		<div className='flex h-screen bg-black text-white font-inter'>
 			<ChatList />
+
 			<motion.main
 				variants={containerVariants}
 				initial='hidden'
 				animate='visible'
-				className='flex-1 flex flex-col bg-black py-6 px-4 relative min-w-0 overflow-x-hidden'>
-				<div className='flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-950 scrollbar-track-black max-w-4xl mx-auto w-full'>
-					{isPending ? (
+				className='flex flex-col flex-1 h-screen bg-black py-6 px-4 relative min-w-0'>
+				{/* Chat Messages Container */}
+				<div className='flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-black px-4 max-w-4xl mx-auto w-full'>
+					{isPending && (
 						<motion.div
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
-							className='text-gray-400 text-center py-2'>
+							className='text-gray-400 text-center py-6'>
 							Loading...
 						</motion.div>
-					) : error ? (
+					)}
+
+					{error && (
 						<motion.div
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
-							className='text-red-400 text-center py-2'>
-							Something went wrong: {error.message}
+							className='text-red-400 text-center py-6'>
+							Error: {error.message}
 						</motion.div>
-					) : data?.history?.length > 0 ? (
-						data.history.map((message, i) => (
+					)}
+
+					{data?.history?.length ?? 0 > 0 ? (
+						data?.history.map((message, i) => (
 							<motion.div
 								key={i}
 								variants={messageVariants}
 								initial='hidden'
 								animate='visible'
 								custom={i}
-								className='mb-3 flex justify-between items-start w-full'>
+								className='mb-4 flex w-full'>
 								<div
 									className={`flex flex-col ${
-										message.role === 'user'
-											? 'items-end justify-end'
-											: 'items-start justify-start'
-									} w-full max-w-[calc(100%-20px)]`}>
+										message.role === 'user' ? 'items-end' : 'items-start'
+									} w-full`}>
+									{/* Image Message Handling */}
 									{message.img && (
-										<div className='relative mb-2'>
-											<IKImage
-												urlEndpoint={
-													process.env.NEXT_PUBLIC_IMAGE_KIT_ENDPOINT ?? ''
-												}
-												path={message.img}
-												width={300} // Increased from 150 to 300
-												transformation={[{ width: '300' }]} // Updated transformation
-												loading='lazy'
-												lqip={{ active: true, quality: 20 }}
-												className='rounded-md shadow-md object-cover max-w-[300px] max-h-[300px] block' // Increased max dimensions
-												alt='Uploaded Image'
-											/>
-										</div>
+										<IKImage
+											urlEndpoint={
+												process.env.NEXT_PUBLIC_IMAGE_KIT_ENDPOINT ?? ''
+											}
+											path={message.img}
+											width={300}
+											transformation={[{ width: '300' }]}
+											loading='lazy'
+											lqip={{ active: true, quality: 20 }}
+											className='rounded-md shadow-md object-cover max-w-[250px] max-h-[250px] mb-2'
+											alt='Uploaded Image'
+										/>
 									)}
+
+									{/* Text Message Bubble */}
 									<div
-										className={`p-2 rounded-md bg-gray-950/90 border border-gray-900 text-white shadow-sm ${
+										className={`p-3 rounded-lg border border-gray-900 text-white shadow-md ${
 											message.role === 'user'
-												? 'bg-gray-800 text-right font-semibold'
-												: 'font-medium'
-										} text-sm md:text-base leading-relaxed max-w-[70%] break-words`}>
+												? 'bg-gray-800 text-right'
+												: 'bg-gray-950 text-left'
+										} text-sm md:text-base max-w-[85%] md:max-w-[70%] break-words`}>
 										<Markdown>{message.parts[0]?.text ?? ''}</Markdown>
 									</div>
 								</div>
@@ -125,13 +124,15 @@ const ChatPage: React.FC = () => {
 						<motion.div
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
-							className='text-gray-400 text-center py-2'>
+							className='text-gray-400 text-center py-6'>
 							No messages yet
 						</motion.div>
 					)}
 				</div>
+
+				{/* Input Field - Fixed at Bottom */}
 				{data && (
-					<div className='mt-4'>
+					<div className='sticky bottom-0 w-full bg-black px-4 pb-4 max-w-4xl mx-auto'>
 						<NewPrompt data={data} />
 					</div>
 				)}

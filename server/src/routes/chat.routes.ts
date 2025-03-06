@@ -12,7 +12,6 @@ interface AuthenticatedRequest extends Request {
 	};
 }
 
-
 router.post(
 	'/chats',
 	requireAuth(),

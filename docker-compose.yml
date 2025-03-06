@@ -1,0 +1,18 @@
+services:
+  server:
+    build: ./server
+    ports:
+      - '5000:5000'
+    env_file:
+      - ./server/.env
+    restart: unless-stopped
+
+  app:
+    build: ./app
+    ports:
+      - '3000:3000'
+    env_file:
+      - ./app/.env.local
+    depends_on:
+      - server
+    restart: unless-stopped

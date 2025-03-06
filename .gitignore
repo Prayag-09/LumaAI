@@ -1,4 +1,44 @@
-node_modules
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
 .env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and settings
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Prisma
+prisma/migrations/
+
+# Build files
+dist/
+build/
+out/
+coverage/
+
+# OS-specific files
 .DS_Store
-.vscode
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Clerk
+.Clerk

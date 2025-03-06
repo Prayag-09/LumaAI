@@ -55,8 +55,6 @@ backend/
    cd backend
    ```
 
-````
-
 2. **Install Dependencies**
 
    ```bash
@@ -120,10 +118,4 @@ backend/
 - **Server Not Starting**: Check `DATABASE_URL` and Node.js version.
 - **API Errors**: Ensure Clerk JWT is valid.
 - **Image Upload Failures**: Verify ImageKit credentials.
-
-## License 📜
-
-[MIT License](LICENSE)
-
----
 ````
